@@ -27,7 +27,8 @@ class Person(object):
         '''
         # Only called if infection attribute is not None.
         # TODO:  Finish this method. Should return a Boolean
-        pass
+        if self.infection != None:
+            return if random.randint(1,101) > self.infection.mortality_rate
 
 
 ''' These are simple tests to ensure that you are instantiating your Person class correctly. '''
@@ -56,6 +57,8 @@ def test_sick_person_instantiation():
     # TODO: complete your own assert statements that test
     # the values at each attribute
     # assert ...
+
+    assert
     pass
 
 
