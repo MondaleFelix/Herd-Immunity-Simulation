@@ -18,11 +18,10 @@ class Logger(object):
         parameters of the simulation as the first line of the file.
         '''
 
-        f = open("myfile.txt", "w")
+        f = open(self.file_name, "w")
 
         f.write(pop_size + "\t" + vacc_percentage + "\t" + virus_name + "\t" + mortality_rate + "\t" + basic_repro_num + "/n")
-
-
+        f.close()
 
         # TODO: Finish this method. This line of metadata should be tab-delimited
         # it should create the text file that we will store all logs in.
@@ -43,7 +42,7 @@ class Logger(object):
         or the other edge cases:
             "{person.ID} didn't infect {random_person.ID} because {'vaccinated' or 'already sick'} \n"
         '''
-        f = open("myfile.txt", "a")
+        f = open(self.file_name, "a")
 
 
         # Handles if did_infect is true and infects
@@ -68,7 +67,7 @@ class Logger(object):
         # along with whether they are sick or vaccinated when they interact to determine
         # exactly what happened in the interaction and create a String, and write to your logfile.
 
-
+        f.close()
     def log_infection_survival(self, person, did_die_from_infection):
         ''' The Simulation object uses this method to log the results of every
         call of a Person object's .resolve_infection() method.
@@ -79,7 +78,15 @@ class Logger(object):
         # TODO: Finish this method. If the person survives, did_die_from_infection
         # should be False.  Otherwise, did_die_from_infection should be True.
         # Append the results of the infection to the logfile
-        pass
+
+        f.write(self.file_name, "a")
+
+        if did_die_from_infection:
+            f.write(person_id + " died from infection")
+        else:
+            f.write(person_id + " survived infection")
+
+        f.close()
 
     def log_time_step(self, time_step_number):
         ''' STRETCH CHALLENGE DETAILS:
