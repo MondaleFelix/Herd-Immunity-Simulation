@@ -31,7 +31,7 @@ class Person(object):
         if self.infection != None:
 
             # Handles Person getting infected and dying
-            if random.uniform(0, 1) < self.infection.mortality_rate:
+            if random.random() < self.infection.mortality_rate:
                 self.is_alive = False
                 did_survive = False
 

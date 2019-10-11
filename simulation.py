@@ -122,7 +122,7 @@ class Simulation(object):
                 bool: True for simulation should continue, False if it should end.
         '''
         # TODO: Complete this helper method.  Returns a Boolean.
-        return len(self.get_infected_people()) is 0
+        return len(self.get_infected_people()) !=  0
 
 
     def run(self):
@@ -138,7 +138,7 @@ class Simulation(object):
             self.time_step()
             should_continue = self._simulation_should_continue()
 
-        print("The simulation has ended after " + str(counter) + " turns" )
+        print(f"The simulation has ended after {counter} turns")
 
 
 
