@@ -50,6 +50,17 @@ class Logger(object):
 
         if did_infect:
             f.write(person._id + " infects " + random_person._id + "\n")
+
+        #  Hanldes if random person is already sick
+
+        elif random_person_sick:
+            f.write(person._id + " didn't infect " + random_person._id + " because they are already sick \n")
+
+        # Handles if the random person is vaccinated 
+
+        elif random_person_vacc:
+            f.write(person._id + " didn't infect " + random_person._id + " because they are vaccinated \n")
+
         else:
             f.write(person.id + " does not infect " + random_person._id + "\n")
         # TODO: Finish this method. Think about how the booleans passed (or not passed)
