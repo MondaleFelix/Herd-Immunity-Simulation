@@ -36,8 +36,8 @@ class Simulation(object):
         # TODO: Store each newly infected person's ID in newly_infected attribute.
         # At the end of each time step, call self._infect_newly_infected()
         # and then reset .newly_infected back to an empty list.
-        self.logger = None
-        self.population = [] # List of Person objects
+        self.logger = Logger(self.file_name)
+        self.population = self._create_population(self.initial_infected) # List of Person objects
         self.pop_size = pop_size # Int
         self.next_person_id = 0 # Int
         self.virus = virus # Virus object
@@ -60,6 +60,33 @@ class Simulation(object):
                 list: A list of Person objects.
 
         '''
+        population_list = []
+
+        # Vaccination calculated using defined vacc percentage and population size
+
+        vacc_number = int(self.pop_size * self.vacc_percentage)
+
+        for person_id in range(self.pop_size):
+
+
+            # Handles if person is infected
+
+            if person_id < initial_infected:
+                population_list.append(Person(person_id, False, self.virus))
+                self.total_infected += 1
+
+            # Handles if person is vaccinated
+
+            elif person_id < initial_infected + vacc_number:
+                population_list.append(Person(person_id, True))
+                self.total_vaccinated += 1
+
+            # Handles if person is not vaccinated
+            else:
+
+                population_list.append(Person(person_id, False))
+
+        return population_list
         # TODO: Finish this method!  This method should be called when the simulation
         # begins, to create the population that will be used. This method should return
         # an array filled with Person objects that matches the specifications of the
@@ -68,7 +95,7 @@ class Simulation(object):
 
         # Use the attributes created in the init method to create a population that has
         # the correct intial vaccination percentage and initial infected.
-        pass
+
 
     def _simulation_should_continue(self):
         ''' The simulation should only end if the entire population is dead
