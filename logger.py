@@ -48,20 +48,20 @@ class Logger(object):
         # Handles if did_infect is true and infects
 
         if did_infect:
-            f.write(person._id + " infects " + random_person._id + "\n")
+            f.write(str(person._id) + " infects " + str(random_person._id) + "\n")
 
         #  Hanldes if random person is already sick
 
         elif random_person_sick:
-            f.write(person._id + " didn't infect " + random_person._id + " because they are already sick \n")
+            f.write(str(person._id) + " didn't infect " + str(random_person._id) + " because they are already sick \n")
 
         # Handles if the random person is vaccinated 
 
         elif random_person_vacc:
-            f.write(person._id + " didn't infect " + random_person._id + " because they are vaccinated \n")
+            f.write(str(person._id) + " didn't infect " + str(random_person._id) + " because they are vaccinated \n")
 
         else:
-            f.write(person.id + " does not infect " + random_person._id + "\n")
+            f.write(str(person._id) + " does not infect " + str(random_person._id) + "\n")
         # TODO: Finish this method. Think about how the booleans passed (or not passed)
         # represent all the possible edge cases. Use the values passed along with each person,
         # along with whether they are sick or vaccinated when they interact to determine
@@ -79,12 +79,12 @@ class Logger(object):
         # should be False.  Otherwise, did_die_from_infection should be True.
         # Append the results of the infection to the logfile
 
-        f.write(self.file_name, "a")
+        f = open(self.file_name, "a")
 
         if did_die_from_infection:
-            f.write(person_id + " died from infection")
+            f.write(str(person._id)  + " died from infection")
         else:
-            f.write(person_id + " survived infection")
+            f.write(str(person._id) + " survived infection")
 
         f.close()
 
