@@ -121,39 +121,67 @@ class Simulation(object):
 
 
     def run(self):
-        ''' This method should run the simulation until all requirements for ending
-        the simulation are met.
-        '''
-        # TODO: Finish this method.  To simplify the logic here, use the helper method
-        # _simulation_should_continue() to tell us whether or not we should continue
-        # the simulation and run at least 1 more time_step.
-
-        # TODO: Keep track of the number of time steps that have passed.
-        # HINT: You may want to call the logger's log_time_step() method at the end of each time step.
-        # TODO: Set this variable using a helper
         time_step_counter = 0
-        should_continue = None
-
-        while should_continue:
-        # TODO: for every iteration of this loop, call self.time_step() to compute another
-        # round of this simulation.
-        print('The simulation has ended after {time_step_counter} turns.'.format(time_step_counter))
-        pass
+        should_continue = self._simulation_should_continue()
+        print(should_continue)
+        index = 0
+        while should_continue == True:
+            # if index > 20:
+            #     break
+            self.time_step()
+            self.logger.log_time_step(time_step_counter)
+            self.did_die()
+            should_continue = self._simulation_should_continue()
+            # index += 1
+            time_step_counter += 1
+        print('loop count:', index)
+        print('The simulation has ended after ' + str(time_step_counter) + ' turns.')
+            
 
     def time_step(self):
-        ''' This method should contain all the logic for computing one time step
+        """
+        This method should contain all the logic for computing one time step
         in the simulation.
-
         This includes:
-            1. 100 total interactions with a randon person for each infected person
-                in the population
-            2. If the person is dead, grab another random person from the population.
-                Since we don't interact with dead people, this does not count as an interaction.
+            1. 100 total interactions with a randon person for each infected
+            person in the population
+            2. If the person is dead, grab another random person from the
+            population.
+                Since we don't interact with dead people, this does not count
+                as an interaction.
             3. Otherwise call simulation.interaction(person, random_person) and
                 increment interaction counter by 1.
-            '''
-        # TODO: Finish this method.
-        pass
+        """
+        # Create list of infected people
+        self.new_deaths = 0
+        self.new_vaccinations = 0
+        inf_list = self.get_infected()
+
+        # Iterate through infected population and interact with 100 people
+        for person in inf_list:
+            interaction_count = 0
+            while interaction_count < 100:
+                random_person = random.choice(self.population)
+                while not random_person.is_alive:
+                    random_person = random.choice(self.population)
+                self.interaction(person, random_person)
+                interaction_count += 1
+
+        # Check if infected people survive the infection
+        for person in inf_list:
+            survived = person.did_survive_infection()
+            if survived:
+                self.total_vaccinated += 1
+                self.new_vaccinations += 1
+                self.logger.log_infection_survival(person, False)
+            else:
+                self.total_dead += 1
+                self.new_deaths += 1
+                self.logger.log_infection_survival(person, True)
+
+        # Infect newly infected people
+        self._infect_newly_infected()
+        self.get_infected()
 
     def interaction(self, person, random_person):
         '''This method should be called any time two living people are selected for an
