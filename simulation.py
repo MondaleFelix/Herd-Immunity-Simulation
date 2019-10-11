@@ -121,22 +121,22 @@ class Simulation(object):
 
 
     def run(self):
-        time_step_counter = 0
-        should_continue = self._simulation_should_continue()
-        print(should_continue)
-        index = 0
-        while should_continue == True:
-            # if index > 20:
-            #     break
+        """
+        This method should run the simulation until all requirements for ending
+        the simulation are met.
+        """
+        counter = 0
+        should_continue = True
+
+        while should_continue:
+            counter += 1
             self.time_step()
-            self.logger.log_time_step(time_step_counter)
-            self.did_die()
+            self.logger.log_time_step(time_step_counter, self.current_infected, self.new_deaths, self.new_vaccinations, self.total_infected, self.total_dead, self.total_vaccinated)
             should_continue = self._simulation_should_continue()
-            # index += 1
-            time_step_counter += 1
-        print('loop count:', index)
-        print('The simulation has ended after ' + str(time_step_counter) + ' turns.')
-            
+
+        print("The simulation has ended after " + str(counter) + " turns" )
+
+
 
     def time_step(self):
         """
@@ -155,31 +155,40 @@ class Simulation(object):
         # Create list of infected people
         self.new_deaths = 0
         self.new_vaccinations = 0
-        inf_list = self.get_infected()
+        infected_list = self.get_infected()
 
-        # Iterate through infected population and interact with 100 people
-        for person in inf_list:
+        #  Hainvg each infecter person interact with 100 other people
+        for person in infected_list:
             interaction_count = 0
-            while interaction_count < 100:
+            while interaction_count != 100:
+
+                # Makes sure the random person is alive
+
                 random_person = random.choice(self.population)
                 while not random_person.is_alive:
                     random_person = random.choice(self.population)
+
+                # If alive interact with the random person
                 self.interaction(person, random_person)
                 interaction_count += 1
 
-        # Check if infected people survive the infection
-        for person in inf_list:
+        # Check if infected people are dead or vaccinated
+        for person in infected_list:
             survived = person.did_survive_infection()
+
+            # Handles if person is alive
             if survived:
-                self.total_vaccinated += 1
                 self.new_vaccinations += 1
+                self.total_vaccinated += 1
                 self.logger.log_infection_survival(person, False)
+
+            # Handles if person died lol
             else:
-                self.total_dead += 1
                 self.new_deaths += 1
+                self.total_dead += 1
                 self.logger.log_infection_survival(person, True)
 
-        # Infect newly infected people
+
         self._infect_newly_infected()
         self.get_infected()
 
