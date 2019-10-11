@@ -109,9 +109,8 @@ class Logger(object):
         pass
 
 
-def test_logger_init():
-    logger = Logger("test.py")
-    assert logger.file_name == "test.py"
+    def test_logger_init():
+        logger = Logger("test.py")
+        assert logger.file_name == "test.py"
 
 
-def test_write_metdata():

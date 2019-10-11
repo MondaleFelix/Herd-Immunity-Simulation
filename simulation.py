@@ -13,7 +13,7 @@ class Simulation(object):
     population that are vaccinated, the size of the population, and the amount of initially
     infected people in a population are all variables that can be set when the program is run.
     '''
-    def __init__(self, pop_size, vacc_percentage, initial_infected=1, virus):
+    def __init__(self, pop_size, vacc_percentage, virus, initial_infected=1):
         ''' Logger object logger records all events during the simulation.
         Population represents all Persons in the population.
         The next_person_id is the next available id for all created Persons,
@@ -105,7 +105,7 @@ class Simulation(object):
         for person in self.population:
             if person.is_alive and person.infection != None:
                 infected_list.append(person)
-                self.current_infected++
+                self.current_infected += 1
 
         return infected_list
 
@@ -253,6 +253,30 @@ class Simulation(object):
         self.newly_infected.clear()
 
 
+    def test_create_population():
+        virus = Virus("Test", 0.8, 0.2)
+        # 100 people, 80% vaccination, 10 initial infected
+        sim = Simulation(100, 0.7, virus, 10)
+
+        inf_list = []
+        vacc_list = []
+
+        print("People", len(sim.population))
+        assert len(sim.population) == 100
+
+        for person in sim.population:
+            if person.infection is not None:
+                inf_list.append(person)
+            elif person.is_vaccinated:
+                vacc_list.append(person)
+
+        print("Infected", len(inf_list))
+        assert len(inf_list) == 10
+
+        print("Vaccinated", len(vacc_list))
+        assert len(vacc_list) == 70
+
+        assert sim.total_vaccinated == len(vacc_list)
 
 if __name__ == "__main__":
     params = sys.argv[1:]
